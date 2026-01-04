@@ -1,8 +1,8 @@
 // release-gate.js
 // Client-side release gate: shows a countdown until a target date and reveals the site
 (function () {
-  // Set to today (Jan 4, 2026) 18:55 local time
-  const TARGET = new Date(2026, 0, 4, 18, 55, 0);
+  // Set to today (Jan 4, 2026) 19:00 local time
+  const TARGET = new Date(2026, 0, 4, 19, 0, 0);
   const REVEAL_KEY = 'project_revealed';
 
   function qParam(name) {
@@ -39,7 +39,7 @@
   const box = document.createElement('div');
   box.id = 'release-gate-box';
   box.innerHTML = `
-    <div id="release-gate-title">This site will open on Jan 22, 2026</div>
+    <div id="release-gate-title">This site will open on Jan 4, 2026</div>
     <div id="release-gate-sub">Countdown to release (local time)</div>
     <div id="release-gate-count">--:--:--</div>
     <div><button id="release-open-btn" disabled>Open project</button></div>
