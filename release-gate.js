@@ -1,8 +1,8 @@
 // release-gate.js
 // Client-side release gate: shows a countdown until a target date and reveals the site
 (function () {
-  // Set to today (Jan 4, 2026) 19:00 local time
-  const TARGET = new Date(2026, 0, 4, 19, 0, 0);
+  // Set to Jan 4, 2026, 19:30 local time
+  const TARGET = new Date(2026, 0, 4, 19, 30, 0);
   const REVEAL_KEY = 'project_revealed';
 
   function qParam(name) {
@@ -15,9 +15,9 @@
   }
 
   // If user already revealed locally or provided ?reveal=1, skip the gate
-  if (localStorage.getItem(REVEAL_KEY) === '1' || qParam('reveal') === '1') {
-    return;
-  }
+  // if (localStorage.getItem(REVEAL_KEY) === '1' || qParam('reveal') === '1') {
+  //   return;
+  // }
 
   // Build overlay
   const style = document.createElement('style');
@@ -56,7 +56,7 @@
   const countEl = document.getElementById('release-gate-count');
   const btn = document.getElementById('release-open-btn');
 
-  function pad(n) { return String(n).padStart(2, '0'); }
+  function pad(n) { return ('0' + n).slice(-2); }
 
   function reveal(auto) {
     // remove overlay and restore scrolling
