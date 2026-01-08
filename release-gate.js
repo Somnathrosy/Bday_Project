@@ -14,7 +14,7 @@
   // --- CONFIGURATION ---
   // Set to Jan 4, 2026, 20:59 local time
   // MONTHS ARE 0-INDEXED (0 = Jan, 1 = Feb, etc.)
-  const TARGET = new Date(2026, 0, 10, 00, 40, 0);
+  const TARGET = new Date(Date.UTC(2026, 0, 10, 10, 40, 0));
   const REVEAL_KEY = 'project_revealed';
 
   function qParam(name) {
@@ -323,6 +323,14 @@
           // Always reset and play countdown song from start
           window.__globalAudio.pause();
           window.__globalAudio.currentTime = 0;
+          console.log('Attempting to play countdown song:', window.__globalAudio.src);
+          window.__globalAudio.load();
+          window.__globalAudio.oncanplaythrough = function() {
+            console.log('Countdown song can play through. Duration:', window.__globalAudio.duration);
+          };
+          window.__globalAudio.onerror = function(e) {
+            console.error('Countdown song audio error:', e);
+          };
           window.__globalAudio.play().then(() => {
             console.log('Countdown song playback started');
             // Clear previous timeout if exists
