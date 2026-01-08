@@ -268,7 +268,7 @@
         z-index: 100;
         opacity: 0;
         width: 90%;
-        max-width: 400px;
+        max-width: 500px; /* Increased slightly for single line */
         transition: all 0.5s ease;
         border: 3px solid rgba(255, 255, 255, 0.7);
       }
@@ -296,13 +296,17 @@
 
       .wish-message h2 {
         color: #ff3366;
-        font-size: 28px;
         margin-bottom: 15px;
         text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
         background: linear-gradient(45deg, #ff3366, #ff66b3);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+
+        /* --- SINGLE LINE FIX --- */
+        white-space: nowrap;
+        font-size: clamp(18px, 6vw, 28px);
+        width: 100%;
       }
 
       .wish-message p {
@@ -392,10 +396,6 @@
           gap: 15px;
         }
 
-        .wish-message h2 {
-          font-size: 24px;
-        }
-
         .wish-message p {
           font-size: 18px;
         }
@@ -438,11 +438,6 @@
           padding: 20px;
         }
 
-        .wish-message h2 {
-          font-size: 22px;
-          margin-bottom: 10px;
-        }
-
         .wish-message p {
           font-size: 16px;
           margin-bottom: 15px;
@@ -481,10 +476,6 @@
           padding: 15px;
         }
 
-        .wish-message h2 {
-          font-size: 20px;
-        }
-
         .wish-message p {
           font-size: 14px;
         }
@@ -506,77 +497,44 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
-    <script
-      bis_use="true"
-      type="text/javascript"
-      charset="utf-8"
-      data-bis-config='["facebook.com/","twitter.com/","youtube-nocookie.com/embed/","//vk.com/","//www.vk.com/","linkedin.com/","//www.linkedin.com/","//instagram.com/","//www.instagram.com/","//www.google.com/recaptcha/api2/","//hangouts.google.com/webchat/","//www.google.com/calendar/","//www.google.com/maps/embed","spotify.com/","soundcloud.com/","//player.vimeo.com/","//disqus.com/","//tgwidget.com/","//js.driftt.com/","friends2follow.com","/widget","login","//video.bigmir.net/","blogger.com","//smartlock.google.com/","//keep.google.com/","/web.tolstoycomments.com/","moz-extension://","chrome-extension://","/auth/","//analytics.google.com/","adclarity.com","paddle.com/checkout","hcaptcha.com","recaptcha.net","2captcha.com","accounts.google.com","www.google.com/shopping/customerreviews","buy.tinypass.com","gstatic.com","secureir.ebaystatic.com","docs.google.com","contacts.google.com","github.com","mail.google.com","chat.google.com","audio.xpleer.com","keepa.com","static.xx.fbcdn.net","sas.selleramp.com","1plus1.video","console.googletagservices.com","//lnkd.demdex.net/","//radar.cedexis.com/","//li.protechts.net/","challenges.cloudflare.com/","ogs.google.com"]'
-      src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/executors/traffic.js"
-    ></script>
-    <style type="text/css">
-      @font-face {
-        font-family: "Atlassian Sans";
-        font-style: normal;
-        font-weight: 400 653;
-        font-display: swap;
-        src: url("chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/fonts/AtlassianSans-latin.woff2")
-          format("woff2");
-        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
-          U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
-          U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-      }
-    </style>
   </head>
-  <body
-    __processed_7adb44bb-c731-4b39-a819-dea3d74cf4d5__="true"
-    bis_register="W3sibWFzdGVyIjp0cnVlLCJleHRlbnNpb25JZCI6ImVwcGlvY2VtaG1ubGJoanBsY2drb2ZjaWllZ29tY29uIiwiYWRibG9ja2VyU3RhdHVzIjp7IkRJU1BMQVkiOiJkaXNhYmxlZCIsIkZBQ0VCT09LIjoiZGlzYWJsZWQiLCJUV0lUVEVSIjoiZGlzYWJsZWQiLCJSRURESVQiOiJkaXNhYmxlZCIsIlBJTlRFUkVTVCI6ImRpc2FibGVkIiwiSU5TVEFHUkFNIjoiZGlzYWJsZWQiLCJMSU5LRURJTiI6ImRpc2FibGVkIiwiQ09ORklHIjoiZGlzYWJsZWQifSwidmVyc2lvbiI6IjIuMC4yMiIsInNjb3JlIjoyMDAyMn1d"
-    data-new-gr-c-s-check-loaded="14.1235.0"
-    data-gr-ext-installed=""
-  >
-    <!-- Balloons and Confetti will be added by JavaScript -->
-
-    <!-- Birthday Cake -->
-    <div class="cake-container" bis_skin_checked="1">
-      <div class="cake" bis_skin_checked="1">
-        <!-- Candles will be added by JavaScript -->
-        <div class="candle-container" id="candleContainer" bis_skin_checked="1">
-          <div class="candle" bis_skin_checked="1">
-            <div class="flame" bis_skin_checked="1"></div>
-            <div class="smoke" bis_skin_checked="1"></div>
+  <body>
+    <div class="cake-container">
+      <div class="cake">
+        <div class="candle-container" id="candleContainer">
+          <div class="candle">
+            <div class="flame"></div>
+            <div class="smoke"></div>
           </div>
-          <div class="candle" bis_skin_checked="1">
-            <div class="flame" bis_skin_checked="1"></div>
-            <div class="smoke" bis_skin_checked="1"></div>
+          <div class="candle">
+            <div class="flame"></div>
+            <div class="smoke"></div>
           </div>
-          <div class="candle" bis_skin_checked="1">
-            <div class="flame" bis_skin_checked="1"></div>
-            <div class="smoke" bis_skin_checked="1"></div>
+          <div class="candle">
+            <div class="flame"></div>
+            <div class="smoke"></div>
           </div>
-          <div class="candle" bis_skin_checked="1">
-            <div class="flame" bis_skin_checked="1"></div>
-            <div class="smoke" bis_skin_checked="1"></div>
+          <div class="candle">
+            <div class="flame"></div>
+            <div class="smoke"></div>
           </div>
-          <div class="candle" bis_skin_checked="1">
-            <div class="flame" bis_skin_checked="1"></div>
-            <div class="smoke" bis_skin_checked="1"></div>
+          <div class="candle">
+            <div class="flame"></div>
+            <div class="smoke"></div>
           </div>
         </div>
 
-        <!-- Frosting & Decorations -->
-        <div class="frosting" bis_skin_checked="1"></div>
+        <div class="frosting"></div>
         <div
           class="decoration"
-          bis_skin_checked="1"
           style="
             background-color: rgb(102, 204, 255);
             top: -27.7843px;
             left: 69.0464%;
           "
         ></div>
-      </div>
         <div
           class="decoration"
-          bis_skin_checked="1"
           style="
             background-color: rgb(255, 153, 102);
             top: -53.6883px;
@@ -585,7 +543,6 @@
         ></div>
         <div
           class="decoration"
-          bis_skin_checked="1"
           style="
             background-color: rgb(102, 204, 255);
             top: -28.5103px;
@@ -594,7 +551,6 @@
         ></div>
         <div
           class="decoration"
-          bis_skin_checked="1"
           style="
             background-color: rgb(153, 255, 102);
             top: -25.5573px;
@@ -603,7 +559,6 @@
         ></div>
         <div
           class="decoration"
-          bis_skin_checked="1"
           style="
             background-color: rgb(255, 51, 102);
             top: -55.9018px;
@@ -612,7 +567,6 @@
         ></div>
         <div
           class="decoration"
-          bis_skin_checked="1"
           style="
             background-color: rgb(255, 153, 102);
             top: -67.4554px;
@@ -621,7 +575,6 @@
         ></div>
         <div
           class="decoration"
-          bis_skin_checked="1"
           style="
             background-color: rgb(255, 51, 102);
             top: -29.2915px;
@@ -630,7 +583,6 @@
         ></div>
         <div
           class="decoration"
-          bis_skin_checked="1"
           style="
             background-color: rgb(255, 153, 102);
             top: -44.952px;
@@ -639,7 +591,6 @@
         ></div>
         <div
           class="decoration"
-          bis_skin_checked="1"
           style="
             background-color: rgb(255, 153, 102);
             top: -51.9292px;
@@ -649,15 +600,13 @@
       </div>
     </div>
 
-    <!-- Enhanced Wish Message Popup -->
-    <div class="wish-message" id="wishMessage" bis_skin_checked="1">
-      <h2>✨ Happy Birthday! ✨</h2>
-      <p>Make a wish, Bestie! May all your dreams come true! 🎂✨</p>
+    <div class="wish-message" id="wishMessage">
+      <h2>✨Happy Birthday Baby✨</h2>
+      <p>Make a wish, Dear! May all your dreams come true! 🎂✨</p>
       <button class="btn" onclick="closeWishMessage()">Thank you! ❤️</button>
     </div>
 
-    <!-- Navigation Buttons -->
-    <div class="nav-buttons" bis_skin_checked="1">
+    <div class="nav-buttons">
       <button class="btn" onclick="goBack()">◀ Back to Memory Lane</button>
       <button class="btn" onclick="goNext()">Next Surprise ▶</button>
     </div>
@@ -714,7 +663,9 @@
 
       // Create candles for the cake
       function createCandles() {
+        // We clear existing static candles first if any
         const candleContainer = document.getElementById("candleContainer");
+        candleContainer.innerHTML = '';
 
         for (let i = 0; i < totalCandles; i++) {
           const candle = document.createElement("div");
@@ -771,6 +722,8 @@
       // Create cake decorations
       function createDecorations() {
         const cake = document.querySelector(".cake");
+        // Keep existing static decorations or add new dynamic ones
+        // This function adds extra dynamic ones on top of static HTML
         const colors = ["#ff3366", "#ffcc00", "#66ccff", "#ff9966", "#99ff66"];
         const numDecorations = 10;
 
@@ -879,19 +832,15 @@
 
       // Navigation functions
       function goBack() {
-        // Replace with actual back URL
-
         window.location.href = "memorylane.html";
       }
 
       function goNext() {
-        // Replace with actual next URL
-
         window.location.href = "letter.html";
       }
-  </script>
-  <script src="release-gate.js"></script>
-  <script src="audio-player.js"></script>
-
+    </script>
+    <script src="release-gate.js"></script>
+    <script src="audio-player.js"></script>
+    <!-- Music controls removed: music will always play -->
   </body>
 </html>

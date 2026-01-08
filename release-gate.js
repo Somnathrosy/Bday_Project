@@ -14,7 +14,7 @@
   // --- CONFIGURATION ---
   // Set to Jan 4, 2026, 20:59 local time
   // MONTHS ARE 0-INDEXED (0 = Jan, 1 = Feb, etc.)
-  const TARGET = new Date(2026, 0, 4, 20, 19, 0);
+  const TARGET = new Date(2026, 0, 9, 00, 40, 0);
   const REVEAL_KEY = 'project_revealed';
 
   function qParam(name) {
@@ -91,13 +91,25 @@
     .time-label { font-size: 16px; opacity: 0.95; margin-top: 10px; color: #000; font-weight: 500; }
     
     #release-open-btn {
-      background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.8);
-      color: #000; padding: 18px 35px; border-radius: 20px;
-      font-size: 20px; cursor: pointer; font-weight: 700;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-      animation: glow 2s infinite ease-in-out; transform: scale(1); transition: transform 0.3s;
+      background: linear-gradient(90deg, #FF1493 0%, #8A2BE2 100%);
+      border: none;
+      color: #fff;
+      padding: 18px 35px;
+      border-radius: 20px;
+      font-size: 20px;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 8px 25px rgba(255, 105, 180, 0.18);
+      animation: glow 2s infinite ease-in-out;
+      transform: scale(1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      letter-spacing: 1px;
     }
-    #release-open-btn:hover { transform: scale(1.1); }
+    #release-open-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 12px 32px rgba(138,43,226,0.25);
+      background: linear-gradient(90deg, #8A2BE2 0%, #FF1493 100%);
+    }
     
     #days-unit { display: none; }
 
@@ -177,7 +189,10 @@
         <div class="time-label">Seconds</div>
       </div>
     </div>
-    <div><button id="release-open-btn"> Surprise </button></div>
+      <div style="margin-top:24px;">
+        <button id="release-open-btn"> Surprise </button>
+        <!-- Play Countdown Song button removed -->
+      </div>
   `;
 
   // Create the hidden modal element
@@ -185,8 +200,8 @@
   msgModal.id = 'msg-modal';
   msgModal.innerHTML = `
     <div id="msg-box">
-      <div id="msg-text">Don't try! 🤫<br>It will not open yet.</div>
-      <button id="msg-close-btn">Okay, I'll wait</button>
+      <div id="msg-text">Don't try! 🤫<br>Open panriya da Bodysoda</div>
+      <button id="msg-close-btn">wait panra</button>
     </div>
   `;
 
@@ -199,6 +214,15 @@
   // Prevent scrolling / interaction behind overlay
   document.documentElement.style.overflow = 'hidden';
   document.body.style.overflow = 'hidden';
+  // Play countdown song while countdown is running
+  try {
+    if (window.__setCountdownMode) window.__setCountdownMode(true);
+    window.__countdownRunning = () => true;
+    if (window.__globalAudio) {
+      window.__globalAudio.currentTime = 0;
+      window.__globalAudio.play().catch(() => {});
+    }
+  } catch (e) {}
 
   const daysCard = document.querySelector('#days-unit .flip-card');
   const hoursCard = document.querySelector('.time-unit:nth-child(2) .flip-card');
@@ -206,7 +230,9 @@
   const secondsCard = document.querySelector('.time-unit:nth-child(4) .flip-card');
   const daysUnitEl = document.getElementById('days-unit');
   const btn = document.getElementById('release-open-btn');
-  const msgCloseBtn = document.getElementById('msg-close-btn');
+    // Play Countdown Song button removed
+    const msgCloseBtn = document.getElementById('msg-close-btn');
+  // Play Countdown Song button removed
 
   let prevDays = '--', prevHours = '--', prevMinutes = '--', prevSeconds = '--';
 
@@ -229,6 +255,15 @@
     try { overlay.remove(); } catch (e) {}
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
+    // Switch to main song after reveal
+    try {
+      if (window.__setCountdownMode) window.__setCountdownMode(false);
+      window.__countdownRunning = () => false;
+      if (window.__globalAudio) {
+        window.__globalAudio.__userTriggered = false;
+        window.__globalAudio.play().catch(() => {});
+      }
+    } catch (e) {}
     // persist reveal so returning visitors won't see the gate
     if (auto) localStorage.setItem(REVEAL_KEY, '1');
   }
@@ -242,11 +277,14 @@
       flipCard(hoursCard, '00');
       flipCard(minutesCard, '00');
       flipCard(secondsCard, '00');
-      // Uncomment to auto-open: reveal(true);
+      // Start main song only after timer ends
+      reveal(true);
       return;
     }
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     diff -= days * 24 * 60 * 60 * 1000;
+    // Do not restart countdown song every second
+    // Only play on overlay show or Surprise button
     const hours = Math.floor(diff / (1000 * 60 * 60));
     diff -= hours * 60 * 60 * 1000;
     const minutes = Math.floor(diff / (1000 * 60));
@@ -269,13 +307,46 @@
   update();
 
   // Button Click Logic
+  let countdownSongTimeout;
   btn.addEventListener('click', function () {
     const now = new Date();
     if (now >= TARGET) {
       reveal(false);
     } else {
-      // Show custom popup instead of alert
-      msgModal.style.display = 'flex';
+      // Play countdown song on Surprise button click before countdown ends
+      console.log('Surprise button clicked before countdown ends');
+      try {
+        if (window.__setCountdownMode) window.__setCountdownMode(true);
+        window.__countdownRunning = () => true;
+        if (window.__globalAudio) {
+          window.__globalAudio.__userTriggered = true;
+          // Always reset and play countdown song from start
+          window.__globalAudio.pause();
+          window.__globalAudio.currentTime = 0;
+          window.__globalAudio.play().then(() => {
+            console.log('Countdown song playback started');
+            // Clear previous timeout if exists
+            if (countdownSongTimeout) clearTimeout(countdownSongTimeout);
+            // Pause or switch song after 2 seconds
+            countdownSongTimeout = setTimeout(() => {
+              // After 2 seconds, just pause countdown song and reset userTriggered
+              window.__globalAudio.__userTriggered = false;
+              window.__globalAudio.pause();
+              console.log('Countdown song stopped after 2 seconds, main song will NOT resume until timer ends');
+            }, 2000);
+          }).catch((err) => {
+            console.error('Countdown song playback error:', err);
+          });
+        } else {
+          console.warn('window.__globalAudio not found');
+        }
+      } catch (e) {
+        console.error('Error in Surprise button handler:', e);
+      }
+      // Show custom popup after 2 seconds
+      setTimeout(function() {
+        msgModal.style.display = 'flex';
+      }, 2000);
     }
   });
 

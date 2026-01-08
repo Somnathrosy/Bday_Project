@@ -16,19 +16,45 @@
   // find or create audio element
   let audio = document.getElementById('birthday-song') || document.getElementById('global-audio');
   const createdAudio = !audio;
+  let countdownMode = false;
+  let countdownSong = 'audio/countdown-song.mp3';
+  let mainSong = 'audio/main-song.mp3';
+  let currentSong = mainSong;
+
+  // Helper to set audio source
+  function setAudioSource(srcUrl) {
+    if (!audio) return;
+    audio.pause();
+    audio.src = srcUrl;
+    audio.load();
+    audio.currentTime = 0;
+  }
 
   if (!audio) {
     audio = document.createElement('audio');
     audio.id = 'global-audio';
     audio.loop = true;
     audio.preload = 'auto';
-    const src = document.createElement('source');
-    src.src = 'audio/song.mp3';
-    src.type = 'audio/mp3';
-    audio.appendChild(src);
     audio.style.display = 'none';
     document.body.appendChild(audio);
   }
+  // Always start with main song unless countdownMode is set
+  setAudioSource(mainSong);
+  window.__globalAudio = audio;
+  window.__setCountdownMode = function (isCountdown) {
+    countdownMode = isCountdown;
+    if (countdownMode) {
+      audio.loop = false;
+      setAudioSource(countdownSong);
+    } else {
+      audio.loop = true;
+      setAudioSource(mainSong);
+    }
+  };
+  window.__playCountdownSong = function () {
+    setAudioSource(countdownSong);
+    audio.play().catch(() => {});
+  };
 
   // restore volume
   const savedVol = parseFloat(localStorage.getItem(KEY_VOLUME));
@@ -114,10 +140,15 @@
   // hook events
   playBtn.addEventListener('click', function (e) {
     e.preventDefault();
-    if (audio.paused) {
-      audio.play().catch(() => { /* autoplay blocked */ });
+    // If countdown mode, play countdown song
+    if (typeof window.__countdownRunning === 'function' && window.__countdownRunning()) {
+      window.__playCountdownSong();
     } else {
-      audio.pause();
+      if (audio.paused) {
+        audio.play().catch(() => { /* autoplay blocked */ });
+      } else {
+        audio.pause();
+      }
     }
     updatePlayIcon();
   });
@@ -130,39 +161,36 @@
   audio.addEventListener('play', updatePlayIcon);
   audio.addEventListener('pause', updatePlayIcon);
 
-  // if saved as playing, try to resume — attempt autoplay on load
-  // Also consider whether the user previously enabled sound (user gesture) so autoplay can be attempted
-  const wasPlaying = sessionStorage.getItem(KEY_PLAYING) === 'true' || sessionStorage.getItem(KEY_USER_GESTURE) === 'true' || localStorage.getItem(KEY_USER_GESTURE) === 'true';
+  // Always attempt to play music on every page load and user interaction
   window.addEventListener('load', function () {
-    // Try to play; browsers may block autoplay with sound. We still attempt once.
     function tryPlayOnce() {
       audio.play().then(() => {
-        sessionStorage.setItem(KEY_PLAYING, 'true');
         updatePlayIcon();
       }).catch(() => {
-        // Autoplay blocked — mark as not playing for now
-        sessionStorage.setItem(KEY_PLAYING, 'false');
         updatePlayIcon();
       });
     }
-
-    if (wasPlaying) {
-      tryPlayOnce();
-    } else {
-      // still try to start automatically once
-      tryPlayOnce();
-    }
+    tryPlayOnce();
     updatePlayIcon();
-
-    // If audio is still paused after a short delay, autoplay was likely blocked.
-    // Show a small unobtrusive prompt so the user can enable sound with a click.
-    setTimeout(() => {
+    // Add global click/touchstart event to force music playback
+    function forcePlayMusic() {
       if (audio.paused) {
-        // create prompt if not already present
+        audio.play().then(() => {
+          updatePlayIcon();
+        }).catch(() => {});
+      }
+    }
+    window.addEventListener('click', forcePlayMusic, { once: true });
+    window.addEventListener('touchstart', forcePlayMusic, { once: true });
+    // Also keep the prompt for visibility
+    setTimeout(() => {
+      // Only show the enable music icon on index.html
+      const isIndex = /index(\.html)?$/i.test(window.location.pathname);
+      if (isIndex && audio.paused) {
         if (!document.getElementById('enable-sound-prompt')) {
           const btn = document.createElement('button');
           btn.id = 'enable-sound-prompt';
-          btn.textContent = '🔊 Enable sound';
+          btn.textContent = '🔊 Click anywhere to enable music';
           btn.style.position = 'fixed';
           btn.style.bottom = '24px';
           btn.style.right = '24px';
@@ -175,19 +203,7 @@
           btn.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
           btn.style.cursor = 'pointer';
           btn.style.fontSize = '14px';
-          btn.addEventListener('click', () => {
-            audio.play().then(() => {
-              // mark as playing and as having received a user gesture so subsequent pages will attempt to resume
-              try { sessionStorage.setItem(KEY_PLAYING, 'true'); } catch (e) {}
-              try { sessionStorage.setItem(KEY_USER_GESTURE, 'true'); } catch (e) {}
-              try { localStorage.setItem(KEY_USER_GESTURE, 'true'); } catch (e) {}
-              updatePlayIcon();
-              btn.remove();
-            }).catch(() => {
-              // still blocked or error; keep the button so user can try again
-              console.log('Playback attempt failed on user click');
-            });
-          });
+          btn.addEventListener('click', forcePlayMusic);
           document.body.appendChild(btn);
         }
       }

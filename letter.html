@@ -472,17 +472,11 @@
         </div>
     </div>
 
-    <!-- Music Controls -->
-    <div class="music-controls" id="music-toggle">
-        <i class="fas fa-volume-mute" id="music-icon"></i>
-    </div>
+    <!-- Music Controls removed: music will always play -->
 
     <!-- Audio Elements -->
     <audio id="click-sound" preload="auto">
         <source src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_bb630cc098.mp3?filename=cute-notification-ringtone-1-173850.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="background-music" loop>
-        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=relaxing-145038.mp3" type="audio/mpeg">
     </audio>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
@@ -551,24 +545,7 @@
                 modalOverlay.classList.remove('active');
             });
 
-            // Music controls
-            const musicToggle = document.getElementById('music-toggle');
-            const musicIcon = document.getElementById('music-icon');
-            const backgroundMusic = document.getElementById('background-music');
-            let isMusicPlaying = false;
-
-            musicToggle.addEventListener('click', function() {
-                if (isMusicPlaying) {
-                    backgroundMusic.pause();
-                    musicIcon.classList.remove('fa-volume-up');
-                    musicIcon.classList.add('fa-volume-mute');
-                } else {
-                    backgroundMusic.play().catch(e => console.log('Audio play error:', e));
-                    musicIcon.classList.remove('fa-volume-mute');
-                    musicIcon.classList.add('fa-volume-up');
-                }
-                isMusicPlaying = !isMusicPlaying;
-            });
+            // Music controls removed: music will always play
 
             // Helper Functions
             function createFloatingElement(element, index) {
